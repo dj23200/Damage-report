@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Building Damage Assessment Form">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="manifest" href="manifest.json">
+    <title>Building Damage Assessment Form</title>
+    <style>
+        body {
+            background: #fff;
+            color: #000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 10px;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        h2 { font-size: 20px; margin-bottom: 15px; text-align: center; }
+        h3 { font-size: 18px; margin-bottom: 10px; }
+        .section { margin-bottom: 20px; }
+        label { display: block; margin: 10px 0 5px; font-weight: bold; }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        select[multiple] { height: auto; min-height: 100px; }
+        textarea { min-height: 100px; resize: vertical; }
+        button {
+            width: 100%;
+            background: #fff;
+            color: #000;
+            border: 2px solid #000;
+            padding: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 0;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        button:hover { background: #f0f0f0; }
+        #result, #search { display: none; }
+        .scrollable { max-height: 200px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+        th, td { border: 1px solid #000; padding: 10px; text-align: left; }
+        th { background: #f9f9f9; }
+        @media (max-width: 600px) {
+            body { padding: 5px; }
+            .container { padding: 10px; }
+            h2 { font-size: 18px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="form" class="container">
+        <h2 id="formTitle">Building Damage Assessment Form</h2>
+        <label for="language">Choose Language / اختر اللغة:</label>
+        <select id="language" onchange="changeLanguage()">
+            <option value="en">English</option>
+            <option value="ar">Arabic</option>
+        </select>
+        <div class="section">
+            <h3 id="sectionA">Section A - Engineer Information</h3>
+            <label id="lblReportId">Report ID:</label>
+            <input type="text" id="reportId" required>
+            <label id="lblDate">Date:</label>
+            <input type="date" id="date">
+            <label id="lblEngineerName">Engineer Full Name:</label>
+            <input type="text" id="engineerName">
+            <label id="lblSyndicateNo">Syndicate Registration No:</label>
+            <input type="text" id="syndicateNo">
+            <label id="lblContact">Contact Number:</label>
+            <input type="tel" id="contact">
+        </div>
+        <div class="section">
+            <h3 id="sectionB">Section B - Location & Building Identification</h3>
+            <label id="lblAddress">Address:</label>
+            <input type="text" id="address">
+            <label id="lblBuildingId">Building ID:</label>
+            <input type="text" id="buildingId">
+            <label id="lblZoningStatus">Zoning Status:</label>
+            <select id="zoningStatus"></select>
+            <label id="lblHeritageZone">Heritage Zone:</label>
+            <select id="heritageZone"></select>
+            <label id="lblBuildingUse">Building Use:</label>
+            <select id="buildingUse" multiple></select>
+            <label id="lblArea">Area (m²):</label>
+            <select id="area"></select>
+            <label id="lblStories">Stories:</label>
+            <select id="stories"></select>
+            <label id="lblRooms">Rooms:</label>
+            <select id="rooms"></select>
+            <label id="lblAge">Building Age:</label>
+            <select id="age"></select>
+            <label id="lblConstructionType">Construction Type:</label>
+            <select id="constructionType" multiple></select>
+            <label id="lblConstructionOther">Other Construction:</label>
+            <input type="text" id="constructionOther">
+            <label id="lblRoofType">Roof Type:</label>
+            <select id="roofType" multiple></select>
+            <label id="lblRoofOther">Other Roof:</label>
+            <input type="text" id="roofOther">
+            <label id="lblOccupancy">Occupancy:</label>
+            <select id="occupancy" multiple></select>
+            <label id="lblOccupancyOther">Other Occupancy:</label>
+            <input type="text" id="occupancyOther">
+            <label id="lblVacancyBy">Vacancy by:</label>
+            <select id="vacancyBy" multiple></select>
+            <label id="lblVacancyOther">Other Vacancy:</label>
+            <input type="text" id="vacancyOther">
+            <label id="lblDamageBy">Damage by:</label>
+            <select id="damageBy" multiple></select>
+            <label id="lblDamageOther">Other Damage:</label>
+            <input type="text" id="damageOther">
+        </div>
+        <div class="section">
+            <h3 id="sectionC">Section C - Damage Overview</h3>
+            <table>
+                <tr>
+                    <th>#</th>
+                    <th id="tblCondition">Condition</th>
+                </tr>
+                <tr><td id="tblStructural">Structural</td><td><select id="structuralDamage"></select></td></tr>
+                <tr><td id="tblWallFinishes">Wall Finishes</td><td><select id="wallFinishesDamage"></select></td></tr>
+                <tr><td id="tblElectrical">Electrical</td><td><select id="electricalDamage"></select></td></tr>
+                <tr><td id="tblHeating">Heating</td><td><select id="heatingDamage"></select></td></tr>
+                <tr><td id="tblWaterInfiltration">Water Infiltration</td><td><select id="waterInfiltrationDamage"></select></td></tr>
+                <tr><td id="tblSanitation">Sanitation</td><td><select id="sanitationDamage"></select></td></tr>
+                <tr><td id="tblDoorsWindows">Doors/Windows</td><td><select id="doorsWindowsDamage"></select></td></tr>
+            </table>
+        </div>
+        <div class="section">
+            <h3 id="sectionD">Section D - Proposed Interventions</h3>
+            <label id="lblHabitability">Habitability:</label>
+            <select id="habitability"></select>
+            <label id="lblProposedInterventions">Proposed Interventions:</label>
+            <select id="proposedInterventions" multiple></select>
+            <label id="lblNotes">Notes:</label>
+            <textarea id="notes" class="scrollable"></textarea>
+            <label id="lblEngineerNameD">Engineer Name:</label>
+            <input type="text" id="engineerNameD">
+            <label id="lblSignature">Signature:</label>
+            <input type="text" id="signature">
+        </div>
+        <button id="btnSave">Save</button>
+        <button id="btnSearch">Search by Report ID</button>
+    </div>
+
+    <div id="search" class="container" style="display:none;">
+        <label id="lblSearchId">Report ID:</label>
+        <input type="text" id="searchId">
+        <button id="btnSearchSearch">Search</button>
+    </div>
+
+    <div id="result" class="container">
+        <h3 id="resultTitle">Result</h3>
+        <div id="resultContent"></div>
+        <button id="btnDelete">Delete</button>
+        <button id="btnBack">Back</button>
+        <button id="btnExport">Export to PDF</button>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js')
+                .then(() => console.log('Service Worker registered'))
+                .catch(err => console.error('Service Worker failed:', err));
+        }
+    </script>
+</body>
+</html>
